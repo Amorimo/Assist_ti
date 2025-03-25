@@ -1,7 +1,7 @@
 {
-  "name": "assist_ti",
+  "name": "sistema_desk",
   "version": "1.0.0",
-  "description": "Desenvolvimento de um sistema desktop para gestão de ordem de serviço de uma assistência técnica de computadores e notebooks",
+  "description": "Desenvolvimento de um sistema desktop para a gestão de ordem de serviços de uma assistência técnica de computadores e notebooks.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -9,15 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Amorimo/Assist_ti.git"
+    "url": "git+https://github.com/Nic0libatista/sistema_desk.git"
   },
-  "author": "Matheus Amorim",
+  "author": "Nicoli Santos",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Amorimo/Assist_ti/issues"
+    "url": "https://github.com/Nic0libatista/sistema_desk/issues"
   },
-  "homepage": "https://github.com/Amorimo/Assist_ti#readme",
+  "homepage": "https://github.com/Nic0libatista/sistema_desk#readme",
   "devDependencies": {
     "electron": "^34.2.0"
+  },
+  "dependencies": {
+    "mongoose": "^8.12.2"
   }
 }

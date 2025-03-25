@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Titulo da janela -->
-    <title>Assist TI</title>
-    <!-- Bootstrap -->
+    <title> SISTEMA_DESK </title>
+    <!-- bootstrap -->
      <link rel="stylesheet" href="../public/css/bootstrap.min.css">
-    <!-- CSS Personalizado -->
-     <link rel="stylesheet" href="../public/css/style.css">
+     <!-- css personalizado -->
+      <link rel="stylesheet" href="../public/css/style.css">
+    <!-- Impedir a execução de scripts externos ou não autorizados-->
+   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
 </head>
 <body>
-    <div class="container">
-        <h1>Hello Electron</h1>
-    </div>
+    <div class="containe button">
+    <img src="../public/img/clientes.png" alt="clientes" title=" Cadastro de clientes" onclick="cliente()">
+    <img src="../public/img/os.png" alt="computador" title="emissão de os" onclick="os()">
     
-    <!-- Bootstrap -->
-     <script src="../public/js/bootstrap.min.js"></script>
+</div>
+
+<footer>
+    <p id="dataatual"> </p>
+    <img src="../public/img/dboff.png" alt="db icon" id="statusdb">
+</footer>
+     <!-- bootstrap -->
+      <script src="../public/js/bootstrap.min.js"></script>
+      <script src="../public/js/script.js"></script>
+      <!-- renderizador -->
+       <script src="renderer.js"></script>
 </body>
 </html>
