@@ -39,3 +39,13 @@ footer p {
     border: none;
     cursor: pointer;
 }
+
+/*Logo*/
+
+#logo{
+    position: fixed;
+    bottom: 40px;
+    right: 5;
+    border: none;
+    cursor: none;
+ }

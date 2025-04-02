@@ -10,8 +10,7 @@ const { model, Schema } = require('mongoose')
 const clienteSchema = new Schema({
     nomeCliente: {
         type: String
-    },
-    
+    },    
     cpfCliente: {
         type: String,
         unique: true,
@@ -24,28 +23,28 @@ const clienteSchema = new Schema({
         type: String
     },
     cepCliente: {
-        type: String
+        type: String        
     },
     logradouroCliente: {
-        type: String
+        type: String  
     },
     numeroCliente: {
-        type: String
+        type: String  
     },
     complementoCliente: {
-        type: String
+        type: String  
     },
     bairroCliente: {
-        type: String
+        type: String 
     },
     cidadeCliente: {
-        type: String
+        type: String 
     },
     ufCliente: {
-        type: String
+        type: String 
     },
-}, {versionKey: false}) // Não versionar os dados armazenados
+}, {versionKey: false}) //não versionar os dados armazenados
 
-// Exportar para o main o modelo de dados
+// exportar para o main o modelo de dados
 // OBS: Clientes será o nome da coleção
 module.exports = model('Clientes', clienteSchema)
