@@ -35,38 +35,40 @@ function buscarCEP() {
         })
         .catch(error => console.error("Erro ao buscar CEP:", error));
 }
+// Vetor global que será usado na manipulação dos dados
+let arrayClient=[]
 
 // Capturar o foco na busca pelo nome do cliente
 // A constante foco obtem o elemento HTML (input) identificada como searchClient
-const foco=document.getElementById('searchClient')
+const foco = document.getElementById('searchClient')
 
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded', () => {
     // Desabilitar botões
-    btnUpdate.disable=true
-    btnUpdate.disable=true
+    btnUpdate.disable = true
+    btnUpdate.disable = true
 
     // Foco na busca do cliente
     foco.focus()
 })
 
 // Captura dos dados dos input do funcionario (Passo 1: fluxo)
-let frmClient=document.getElementById('frmClient')
-let nameClient=document.getElementById('inputNameClient')
-let cpfClient=document.getElementById('inputCPFClient')
-let emailClient=document.getElementById('inputEmailClient')
-let phoneClient=document.getElementById('inputPhoneClient')
-let cepClient=document.getElementById('inputCEPClient')
-let addressClient=document.getElementById('inputAddressClient')
-let numberClient=document.getElementById('inputNumberClient')
-let complementClient=document.getElementById('inputComplementClient')
-let neighborhoodClient=document.getElementById('inputNeighborhoodClient')
-let cityClient=document.getElementById('inputCityClient')
-let ufClient=document.getElementById('inputUFClient')
+let frmClient = document.getElementById('frmClient')
+let nameClient = document.getElementById('inputNameClient')
+let cpfClient = document.getElementById('inputCPFClient')
+let emailClient = document.getElementById('inputEmailClient')
+let phoneClient = document.getElementById('inputPhoneClient')
+let cepClient = document.getElementById('inputCEPClient')
+let addressClient = document.getElementById('inputAddressClient')
+let numberClient = document.getElementById('inputNumberClient')
+let complementClient = document.getElementById('inputComplementClient')
+let neighborhoodClient = document.getElementById('inputNeighborhoodClient')
+let cityClient = document.getElementById('inputCityClient')
+let ufClient = document.getElementById('inputUFClient')
 
 // 
 // Evento associado ao botão submit (Uso das validações do HTML)
-frmClient.addEventListener('submit', async (event)=>{
+frmClient.addEventListener('submit', async (event) => {
     // Evitar o comportamento padrão do submit que é enviar os dados do formulário e reiniciar o documento HTML
     event.preventDefault()
 
@@ -75,7 +77,7 @@ frmClient.addEventListener('submit', async (event)=>{
 
 
     // Criar um objeto para armazenar os dados do cliente antes de enviar ao main
-    const client={
+    const client = {
         nameCli: nameClient.value,
         cpfCli: cpfClient.value,
         emailCli: emailClient.value,
@@ -89,7 +91,7 @@ frmClient.addEventListener('submit', async (event)=>{
         ufCli: ufClient.value
     }
 
-    
+
     api.newClient(client)
 })
 
@@ -106,4 +108,53 @@ api.resetForm((args) => {
 })
 
 // == Fim - reset form ========================================
+// ============================================================
+
+// ============================================================
+// == CRUD Read==============================================
+
+function buscarCliente() {
+    // console.log("Teste do Botão buscar")
+    // Passo 1: Capturar o nome do cliente
+    let name = document.getElementById('searchClient').value
+    console.log(name) // Teste do passo 1
+
+    // Passo 2: Envio do nome ao main
+    api.searchName(name)
+
+    // Recebimento dos dados do cliente
+    api.renderClient((event, dataClient)=>{
+        console.log(dataClient) // Teste do passo 5
+
+        // Passo 6: renderizar os dados do cxliente no formulário
+        // Criar um vetor global para manipulação dos dados
+        // Criar constante para converter os dados (string) para o formato JSON (JSON.parse)
+        // Usar o laço forEach para percorrer o vetor e setar os campos (caixas de texto) do formulári
+        const dadosCliente=JSON.parse(dataClient)
+        // Atribuir ao vetor os dados do cliente
+        arrayClient=dadosCliente
+        
+        // Extrair os dados do cliente
+        arrayClient.forEach((c) => {
+            nameClient.value=c.nomeCliente,
+            cpfClient.value=c.cpfCliente,
+            emailClient.value=c.emailCliente,
+            phoneClient.value=c.foneCliente,
+            cepClient.value=c.cepCliente
+            addressClient.value=c.logradouroCliente,
+            numberClient.value=c.numeroCliente,
+            complementClient.value=c.complementoCliente,
+            neighborhoodClient.value=c.bairroCliente,
+            cityClient.value=c.cidadeCliente
+
+
+
+
+        });
+
+    })
+}
+
+
+// == Fim - Crud Read ========================================
 // ============================================================
