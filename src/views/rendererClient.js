@@ -52,6 +52,33 @@ document.addEventListener('DOMContentLoaded', () => {
     foco.focus()
 })
 
+
+// =================================================================
+// ======== Manipulação da tecla Enter ======== 
+
+// Função para manipular o evento da tecla Enter
+function teclaEnter(event){
+    // Se a tecla Enter for pressionada
+    if(event.key==="Enter"){
+        event.preventDefault() // Ignorar o comportamento padrão
+
+        // Associar o Enter a busca pelo cliente
+        buscarCliente()
+    }
+}
+
+// Função para restaurar o padrão da telca Enter (Submit)
+function restaurarEnter(){
+    frmClient.removeEventListener('keydown', teclaEnter)
+}
+
+// "Escuta do evento teclaEnter"
+frmClient.addEventListener('keydown',teclaEnter)
+
+// ======== Fim - Manipulação da tecla Enter ======== 
+// =================================================================
+
+
 // Captura dos dados dos input do funcionario (Passo 1: fluxo)
 let frmClient = document.getElementById('frmClient')
 let nameClient = document.getElementById('inputNameClient')
@@ -119,6 +146,14 @@ function buscarCliente() {
     let name = document.getElementById('searchClient').value
     console.log(name) // Teste do passo 1
 
+    
+    if(name===""){
+        api.validateSearch()
+        foco.focus()
+    } else{
+        api.searchName(name)
+    }
+
     // Passo 2: Envio do nome ao main
     api.searchName(name)
 
@@ -155,6 +190,20 @@ function buscarCliente() {
     })
 }
 
+//  Setar cliente não cadastrado (Recortar do campo de busca e colar no campo novo)
 
+api.setClient((args)=>{
+    // Criar uma variável para armazenar o valor digitado no campo de busca (Nome ou CPF)
+    let campoBusca=document.getElementById('searchClient').value
+
+    // Foco no campo de nome do cliente
+    nameClient.focus()
+
+    // Remover o valor digitado no campo de busca
+    foco.value=""
+
+    // Preencher o campo de nome do cliente com o nome da busca
+    nameClient.value=campoBusca
+})
 // == Fim - Crud Read ========================================
 // ============================================================

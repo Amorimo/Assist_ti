@@ -19,6 +19,7 @@ const { jspdf, default: jsPDF } = require('jspdf')
 
 // Importação da biblioteca fs (nativa do JavaScript) para manipulação de arquivos (no caso arquivos pdf)
 const fs = require('fs')
+const { type } = require('node:os')
 
 
 // Janela principal
@@ -412,3 +413,42 @@ ipcMain.on('search-name',async (event,name)=> {
 
 // == Fim - CRUD Read =============================
 // ============================================================
+ipcMain.on('validate-search',()=>{
+    dialog.showMessageBox({
+        type:'warning',
+        title:"Atenção!",
+        message:"Preencha o cmapo de busca",
+        buttons:['OK']
+    })
+})
+
+ipcMain.on('search-name',async (event,name)=>{
+    try{
+        const dataClient=await clientModel.findOneAndReplace({
+            nomeCliente: new RegExp(name, 'i')
+        })
+        console.log(dataClient)
+        
+        if (dataClient.length===0){
+            dialog.showMessageBox({
+                type:'question',
+                title:"Aviso",
+                message:"Cliente não cadastrado.\n Deseja cadastrar esse cliente?",
+                defaultId:0,
+                buttons:['Sim','Não']
+        
+            }).then((result)=>{
+                if(result.response===0){
+                    // Envia ao renderizador um pedido para 
+                    event.reply('set-client')
+                } else{
+                    event.reply('reset-form')
+                }
+            })
+        }
+        event.reply('render-client',JSON.stringify(dataClient))
+    } catch(error){
+        console.log(error)
+    }
+})
+
