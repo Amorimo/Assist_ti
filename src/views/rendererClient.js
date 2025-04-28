@@ -93,6 +93,9 @@ let neighborhoodClient = document.getElementById('inputNeighborhoodClient')
 let cityClient = document.getElementById('inputCityClient')
 let ufClient = document.getElementById('inputUFClient')
 
+// Captura do ID do Cliente (Usado no DELETE e UPDATE)
+let id=document.getElementById('idClient')
+
 // 
 // Evento associado ao botão submit (Uso das validações do HTML)
 frmClient.addEventListener('submit', async (event) => {
@@ -171,6 +174,7 @@ function buscarCliente() {
         
         // Extrair os dados do cliente
         arrayClient.forEach((c) => {
+            id.value=c._id,
             nameClient.value=c.nomeCliente,
             cpfClient.value=c.cpfCliente,
             emailClient.value=c.emailCliente,
@@ -182,9 +186,11 @@ function buscarCliente() {
             neighborhoodClient.value=c.bairroCliente,
             cityClient.value=c.cidadeCliente
 
+            // Bloqueio do botão adicionar
+            btnCreate.disabled=true
 
-
-
+            // Desbloquei dos botoes
+            btnUpdate.disabled=false
         });
 
     })
@@ -206,4 +212,14 @@ api.setClient((args)=>{
     nameClient.value=campoBusca
 })
 // == Fim - Crud Read ========================================
+// ============================================================
+
+// ============================================================
+// == CRUD Delete==============================================
+function excluirCliente(){
+    console.log(id.value) // Passo 1 ( Receber do form o ID)
+    api.deleteClient(id.value) // Passo 2 (Enviar ao main)
+}
+
+// == Fim - Crud Delete ========================================
 // ============================================================

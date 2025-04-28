@@ -20,6 +20,7 @@ const { jspdf, default: jsPDF } = require('jspdf')
 // Importação da biblioteca fs (nativa do JavaScript) para manipulação de arquivos (no caso arquivos pdf)
 const fs = require('fs')
 const { type } = require('node:os')
+const { title } = require('node:process')
 
 
 // Janela principal
@@ -452,3 +453,29 @@ ipcMain.on('search-name',async (event,name)=>{
     }
 })
 
+// ============================================================
+// == CRUD Delete==============================================
+
+ipcMain.on('delete-client', async(event,id)=>{
+    console.log(id) // Teste do Passo 2 (Recebimento do id)
+    try {
+        // Importante - Confirmar a exclusão
+        // client é o nome da variável que representa a janela
+        const {response}=await dialog.showMessageBox(client, {
+            type:'warning',
+            title:'Atenção!',
+            message:"Deseja excluir este cliente?\nEsta ação não poderá ser desfeita.",
+            buttons:['Cancelar','Excluir']// [0 e 1]
+        })
+        if(response===1){
+            // Passo 3 - Excluir o registro do cliente 
+            const delClient=await clientModel.findByIdAndDelete(id)
+            event.reply('reset-form')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// == Fim - Crud Delete ========================================
+// ============================================================

@@ -11,6 +11,11 @@
 }
 
 
+/* Ocultar o campo ID do Cliente */
+#idClient{
+    display: none;
+}
+
 
 footer  {
     background-color: black;
