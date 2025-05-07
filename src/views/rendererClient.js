@@ -107,6 +107,7 @@ frmClient.addEventListener('submit', async (event) => {
 
 
     // Criar um objeto para armazenar os dados do cliente antes de enviar ao main
+    if (id.value === ""){
     const client = {
         nameCli: nameClient.value,
         cpfCli: cpfClient.value,
@@ -120,9 +121,27 @@ frmClient.addEventListener('submit', async (event) => {
         cityCli: cityClient.value,
         ufCli: ufClient.value
     }
-
-
     api.newClient(client)
+        }
+    else{
+        const client = {
+            nameCli: nameClient.value,
+            cpfCli: cpfClient.value,
+            emailCli: emailClient.value,
+            phoneCli: phoneClient.value,
+            cepCli: cepClient.value,
+            addressCli: addressClient.value,
+            numberCli: numberClient.value,
+            complementCli: complementClient.value,
+            neighborhoodCli: neighborhoodClient.value,
+            cityCli: cityClient.value,
+            ufCli: ufClient.value
+        }
+        api.updateClient(client)
+        
+    }
+
+    
 })
 
 // ============================================================

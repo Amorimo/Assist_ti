@@ -1,30 +1,21 @@
-// arquivo de pre carregamento e reforço de segurança na comunicação entre processos (IPC)
+const { contextBridge, ipcRenderer } = require('electron')
 
-//const { contextBridge, ipcRenderer } = require("electron")
-
-// importaçao dos recursos do framework
-// contextbridge segunrança | ipcrenderer comunicação
-const {contextBridge,ipcRenderer} = require('electron')
-const { validate } = require('./src/models/Clientes')
-
-// Enviar ao main um pedido para conexão com o banco de dados e troca do icone no processo de renderização(index.html)
+// Solicita conexão com o banco ao iniciar
 ipcRenderer.send('db-connect')
 
-contextBridge.exposeInMainWorld('api',{
+contextBridge.exposeInMainWorld('api', {
     clientWindow: () => ipcRenderer.send('client-Window'),
     osWindow: () => ipcRenderer.send('os-Window'),
-    dbStatus:(message)=>ipcRenderer.on('db-status', message),
-    newClient:(client)=>ipcRenderer.send('new-client',client),
-    resetForm: (args) => ipcRenderer.on('reset-form', args),
-    searchName:(name)=> ipcRenderer.send('search-name',name),
-    renderClient:(dataClient)=>ipcRenderer.on('render-client', dataClient),
-    validateSearch:()=>ipcRenderer.send('validate-search'),
-    setClient:()=>ipcRenderer.on('set-client',args),
-    deleteClient: (id) => ipcRenderer.send('delete-client', id)
-
-    
+    dbStatus: (callback) => ipcRenderer.on('db-status', (event, status) => callback(status)),
+    newClient: (client) => ipcRenderer.send('new-client', client),
+    resetForm: (callback) => ipcRenderer.on('reset-form', () => callback()),
+    searchName: (name) => ipcRenderer.send('search-name', name),
+    renderClient: (callback) => ipcRenderer.on('render-client', (event, dataClient) => callback(dataClient)),
+    validateSearch: () => ipcRenderer.send('validate-search'),
+    setClient: (callback) => ipcRenderer.on('set-client', () => callback()),
+    deleteClient: (id) => ipcRenderer.send('delete-client', id),
+    updateCliente: (client) => ipcRenderer.send('update-client', client),
+    searchOS:() => ipcRenderer.send('search-os'),
+    searchClients:(clients) => ipcRenderer.send('search-clients', clients),
+    listClients:(clients) => ipcRenderer.on('list-clients', clients)
 })
-
-function dbStatus(message){
-    ipcRenderer.on('db-status',message)
-}

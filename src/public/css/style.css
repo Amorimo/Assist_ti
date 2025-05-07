@@ -54,3 +54,10 @@ footer p {
     border: none;
     cursor: none;
  }
+
+ /* Lista de clientes vinculados a OS */
+ #viewListSuggestion{
+    z-index: 2;
+    max-width: 382px;
+
+ }
