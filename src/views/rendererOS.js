@@ -1,104 +1,168 @@
-// ==============================================================================
-// ========= Busca Avançada - Estilo Google =============
+// ===========================================================
+// == Busca avançada =========================================
 
-// Capturar os id referente aos campos do nome
 const input = document.getElementById('inputSearchClient')
-
-// Capturar o ID do ul da lista de sugestôes de clientes
 const suggestionList = document.getElementById('viewListSuggestion')
-
-// Capturar os campos que vão ser preenchidos
-let idClient = document.getElementById('inputidClient')
+let idClient = document.getElementById('inputIdClient')
 let nameClient = document.getElementById('inputNameClient')
 let phoneClient = document.getElementById('inputPhoneClient')
 
-// Vetor usado na manipulação (Filtragem) dos dados
-let arrayClients=[]
+let arrayClients = []
 
-// Captura em tempo real do input (Digitação de caracteres na caixa de busca)
-input.addEventListener('input', ()=>{
-    // Passo 1: Capturar o que for digitado na caixa de busca e converter tudo para letrar minúsculas (Auxilio ao filtro)
-    const search = input.value.toLowerCase()
-    // console.log(search)  Teste de apoio a lógica
+input.addEventListener('input', () => {
+    const search = input.value.toLowerCase() //captura o que foi digitado e converte tudo para minúsculo
+    suggestionList.innerHTML = ""
 
-    // Passo 2: Enviar ao main um pedido de busca de clientes pelo nome (Via preload - api IPC)
+    // Buscar os nomes dos clientes no banco
     api.searchClients()
 
+    // Listar os clientes 
+    api.listClients((event, clients) => {
+        const listaClientes = JSON.parse(clients)
+        arrayClients = listaClientes
 
-    // Recebimento dos clientes do vanco de dados (Passo 3)
-    api.listClients((event, clients)=>{
-        console.log(clients) // Teste do passo 3
-        // Converter para JSON os dados dos clientes recebidos
-        const dataClients = JSON.parse(clients)
-
-        // Armazenar no vetor os dados dos clientes
-        arrayClients = dataClients
-
-        // Passo 4: Filtrar os dados dos clientes extraindo nome que tenham relação com os caracteres digitados na busca em tempo real
-        const results =  arrayClients.filter(c =>
+        //Filtra os clientes cujo nome (c.nomeCliente) contém o texto digitado(search)
+        const results = arrayClients.filter(c =>
             c.nomeCliente && c.nomeCliente.toLowerCase().includes(search)
-        ).slice(0,10) // Máximo 10 resultados
-        // console.log(results) Importante para o entendimento
+        ).slice(0, 10) // máximo 10 nomes
 
-        // Limpar a lista a cada caractere digitado
-        suggestionList.innerHTML = ""
+        suggestionList.innerHTML = "" // limpa novamente após possível atraso
 
-        // Para cada resultado gerar um item da lista <li>
-        results.forEach(c =>{
-            // Criar o elemento li
+        // Para cada resultado, cria um item da lista
+        results.forEach(c => {
             const item = document.createElement('li')
-
-            // Adicionar classes bootstrap a cada li criado
             item.classList.add('list-group-item', 'list-group-item-action')
-
-            // Exibir o nome do cliente
             item.textContent = c.nomeCliente
 
-            // Adicionar os li criados da lista ul
-            suggestionList.appendChild(item)
-
-            // Adicionar um evento de clique no item da lista para preencher os campos do formulário
-            item.addEventListener('click', ()=>{
+            // Adiciona evento de clique no ítem da lista para preencher os campos do form
+            item.addEventListener('click', () => {
                 idClient.value = c._id
                 nameClient.value = c.nomeCliente
                 phoneClient.value = c.foneCliente
-
-                // Limpar o input e recolher a lista
                 input.value = ""
                 suggestionList.innerHTML = ""
-
             })
+
+            // adiciona os nomes(itens <li>) a lista <ul>
+            suggestionList.appendChild(item)
         })
-        
-
     })
-
 })
 
-// Ocultar a lista ao clicar fora
-document.addEventListener('click', (event)=>{
+// setar o foco no campo de busca (validação de busca do cliente obrigatória)
+api.setSearch((args) => {
+    input.focus()
+})
 
-    // Esconder a lista se ela existir e estiver ativa
-    if(!input.contains(event.target) && !suggestionList.contains(event.target)) {
+// Ocultar lista ao clicar fora
+document.addEventListener('click', (e) => {
+    if (!input.contains(e.target) && !suggestionList.contains(e.target)) {
         suggestionList.innerHTML = ""
     }
 })
 
+// == Fim - busca avançada =====================================
+// =============================================================
 
-// ========= Fim Busca Avançada ==========
-// ==============================================================================
+// criar um vetor para manipulação dos dados da OS
+let arrayOS = []
+
+// captura dos IDs do form OS
+let frmOS = document.getElementById('frmOS')
+let statusOS = document.getElementById('inputStatus')
+let computer = document.getElementById('inputComputer')
+let serial = document.getElementById('inputSerial')
+let problem = document.getElementById('inputProblem')
+let specialist = document.getElementById('inputSpecialist')
+let diagnosis = document.getElementById('inputDiagnosis')
+let parts = document.getElementById('inputParts')
+let total = document.getElementById('inputTotal')
+// captura da OS (CRUD Delete e Update)
+let os = document.getElementById('inputOS')
 
 
+// ============================================================
+// == CRUD Create/Update ======================================
+
+//Evento associado ao botão submit (uso das validações do html)
+frmOS.addEventListener('submit', async (event) => {
+    //evitar o comportamento padrão do submit que é enviar os dados do formulário e reiniciar o documento html
+    event.preventDefault()
+    // validação do campo obrigatório 'idClient' (validação html não funciona via html para campos desativados)
+    if (idClient.value === "") {
+        api.validateClient()
+    } else {
+        // Teste importante (recebimento dos dados do formuláro - passo 1 do fluxo)
+        console.log(os.value, idClient.value, statusOS.value, computer.value, serial.value, problem.value, specialist.value, diagnosis.value, parts.value, total.value)
+        if (os.value === "") {
+            //Gerar OS
+            //Criar um objeto para armazenar os dados da OS antes de enviar ao main
+            const os = {
+                idClient_OS: idClient.value,
+                stat_OS: statusOS.value,
+                computer_OS: computer.value,
+                serial_OS: serial.value,
+                problem_OS: problem.value,
+                specialist_OS: specialist.value,
+                diagnosis_OS: diagnosis.value,
+                parts_OS: parts.value,
+                total_OS: total.value
+            }
+            // Enviar ao main o objeto os - (Passo 2: fluxo)
+            // uso do preload.js
+            api.newOS(os)
+        } else {
+            //Editar OS
+
+        }
+    }
+})
+
+// == Fim CRUD Create/Update ==================================
+// ============================================================
 
 
-// Buscar OS
-function inputOS(){
-    // console.log("teste do botão")
+// ============================================================
+// == Buscar OS - CRUD Read ===================================
+
+function findOS() {
     api.searchOS()
 }
 
+api.renderOS((event, dataOS) => {
+    console.log(dataOS)
+    const os = JSON.parse(dataOS)
+    // preencher os campos com os dados da OS
+    os.value = os._id
+    idClient.value = os.idCliente
+    statusOS.value = os.status
+    computer.value = os.computador
+    serial.value = os.serie
+    problem.value = os.problema
+    specialist.value = os.tecnico
+    diagnosis.value = os.diagnostico
+    parts.value = os.pecas
+    total.value = os.valor
+})
+
+// == Fim - Buscar OS - CRUD Read =============================
+// ============================================================
+
+
+// ============================================================
+// == Reset form ==============================================
+
 function resetForm() {
-    //limpar os campos e resetar o formulario com as configuraçoes pré definidas
-    
+    // Limpar os campos e resetar o formulário com as configurações pré definidas
     location.reload()
 }
+
+// Recebimento do pedido do main para resetar o form
+api.resetForm((args) => {
+    resetForm()
+})
+
+// == Fim - reset form ========================================
+// ============================================================
+
+
