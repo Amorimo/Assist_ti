@@ -8,14 +8,14 @@ const { model, Schema } = require('mongoose')
 
 // criação da estrutura da coleção OS
 const osSchema = new Schema({
-    dataOS: {
+    dataEntrada: {
         type: Date,
         default: Date.now
     },
     idCliente: {
         type: String,        
     },
-    status_OS: {
+    statusOS: {
         type: String
     },
     computador: {
@@ -26,6 +26,9 @@ const osSchema = new Schema({
     },
     problema: {
         type: String  
+    },
+    observacao: {
+        type: String
     },
     tecnico: {
         type: String  
