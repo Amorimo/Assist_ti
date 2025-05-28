@@ -4,6 +4,14 @@
 const input = document.getElementById('inputSearchClient')
 const suggestionList = document.getElementById('viewListSuggestion')
 let idClient = document.getElementById('inputIdClient')
+// Disparar ação de busca do nome e telefone do cliente quando o inputIdClient for preenchido (change - usado quando o campo input é desativado)
+idClient.addEventListener('change', () => {
+    if (idClient.value !== "") {
+        console.log(idClient.value)
+        api.searchIdClient(idClient.value)
+    }
+})
+
 let nameClient = document.getElementById('inputNameClient')
 let phoneClient = document.getElementById('inputPhoneClient')
 
@@ -68,7 +76,7 @@ document.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     // Desativar os botões
     btnUpdate.disabled = true
-    btnDelete.disabled = true    
+    btnDelete.disabled = true
 })
 
 // criar um vetor para manipulação dos dados da OS
@@ -89,6 +97,7 @@ let total = document.getElementById('inputTotal')
 let idOS = document.getElementById('inputOS')
 // captura do id do campo data
 let dateOS = document.getElementById('inputData')
+
 
 // ============================================================
 // == CRUD Create/Update ======================================
@@ -173,6 +182,8 @@ api.renderOS((event, dataOS) => {
     })
     dateOS.value = formatada
     idClient.value = os.idCliente
+    // disparar ação de busca do cliente pelo id
+    idClient.dispatchEvent(new Event('change'))    
     statusOS.value = os.statusOS
     computer.value = os.computador
     serial.value = os.serie
@@ -186,7 +197,22 @@ api.renderOS((event, dataOS) => {
     btnCreate.disabled = true
     // ativar os botões editar e excluir
     btnUpdate.disabled = false
-    btnDelete.disabled = false    
+    btnDelete.disabled = false
+})
+
+// receber dados do cliente para preenchimento da OS
+api.renderIdClient((event, dataClient) => {
+    console.log(dataClient)
+    /*
+    const dadosCliente = JSON.parse(dataClient)
+    // atribuir ao vetor os dados do cliente
+    arrayClient = dadosCliente
+    // extrair os dados do cliente
+    arrayClient.forEach((c) => {
+        nameClient.value = c.nomeCliente,
+            phoneClient.value = c.foneCliente
+    })
+            */
 })
 
 // == Fim - Buscar OS - CRUD Read =============================
@@ -202,6 +228,17 @@ function removeOS() {
 }
 
 // == Fim - CRUD Delete =======================================
+// ============================================================
+
+
+// ============================================================
+// == Imprimir OS ============================================= 
+
+function generateOS() {
+    api.printOS()
+}
+
+// == Fm - Imprimir OS ======================================== 
 // ============================================================
 
 
